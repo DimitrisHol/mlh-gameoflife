@@ -1,18 +1,21 @@
 import pygame
 import copy as copy
+import sys
+from pygame.locals import *
 obstacles = []
 #the height of the ground
-height = 0 
+height = 600 
+
+wight = 600
+
+size_h = 49
+
+size_w = 49
+
+screen = pygame.display.set_mode((height,wight))
 
 
-size_h = 64
-
-size_w = 64
-
-screen = pygame.display.set_mode((600,500))
-
-
-coor = pygame.rect.Rect(300,500-height,64,64)
+coor = pygame.rect.Rect(300,300,20,20)
 
 
 def getObsticale():
@@ -25,71 +28,72 @@ def draw(h,w,image):
 
 	for i in range(0,w):
 		for j in range(0,h):
+			coord = pygame.rect.Rect(300,300,10,10)
 
-			if i<=int(h/2) and j<=int(w/2):
-				coord = copy.copy(coor)
+			if i<int(w/2) and j<int(h/2):
+
 				
-				coor.x -= i*size_w
-				coor.y -= j*size_h
-				screen.blit(image[0], coor)
+				coord.x = coor.x - (i)*(size_w/2)
+				coord.y = coor.y - (j)*(size_h/2)
+				screen.blit(image[0], coord)
 				
-				coor = copy.copy(coord)
 
-			elif i<=int(w/2) and j>int(h/2):
-				coord = copy.copy(coor)
+			elif i<int(w/2) and j>=int(h/2):
 				
-				coor.x -= i*size_w
-				coor.y = j*size_h
-				screen.blit(image[1], coor)
+				coord.x = coor.x - (i)*(size_w/2)
+				coord.y = coor.y + (j)*(size_h/2)
+				screen.blit(image[1], coord)
 				
-				coor = copy.copy(coord)
 
-
-			elif i>int(w/2) and j<=int(h/2):
-				coord = copy.copy(coor)
+			elif i>=int(w/2) and j<int(h/2):
 				
-				coor.x = i*size_w
-				coor.y -= j*size_h
-				screen.blit(image[2], coor)
-				
-				coor = copy.copy(coord)
+				coord.x = coor.x + (i)*(size_w/2)
+				coord.y = coor.y - (j)*(size_h/2)
+				screen.blit(image[2], coord)
+			
 
+			elif i>=int(w/2) and j>=int(h/2):
 
+				coord.x = coor.x + (i)*(size_w/2)
+				coord.y = coor.y + (j)*(size_h/2)
+				screen.blit(image[3], coord)
 
-			elif i>int(w/2) and j>int(h/2):
-				coord = copy.copy(coor)
-
-				coor.x = i*size_w
-				coor.y = j*size_h
-				screen.blit(image[3], coor)
-
-				coor = copy.copy(coord)
 
 	pygame.display.flip()
 
 
-	if coor.x== 0:
-		coor.x=500
+	if coor.x== -500:
+		coor.x=700
 	coor.move_ip(-1,0)
 
 
 def initObstacles(h, imageStr=["../octopuss1.png","N.png","facebook.png", "instagram.png"]):
-	global height, obstacles, coor
-	height = h
+	global  obstacles, coor
 	image = []
 	for i in imageStr:
 		image.append(pygame.image.load(i))
 
-
+#	for i in image:
+#		picture = pygame.transform.scale(i,(size_w,size_h))
 
 
 	print len(image)
+	pygame.init()
 	while True:
-		screen.fill((255,0,0))
+		screen.fill((87, 166, 250))
+		pygame.draw.rect(screen,(4, 62, 5),(0,height-h-5+size_w/2,wight,height))
 
 		draw(4,4,image)
 
-		pygame.display.update()
+		for event in pygame.event.get():
+			if pygame.key.get_pressed().index(1)==27:
+	
+			#if event.type==pygame.K_ESCAPE:
+				pygame.quit()
+				sys.exit()
+
+
+
 
 
 
